@@ -172,6 +172,67 @@ class AdminManagementTest extends TestCase
         ]);
     }
 
+    public function test_service_and_category_descriptions_support_safe_rich_text_formatting(): void
+    {
+        $this->actingAs(User::factory()->create());
+        $category = ServiceCategory::create(['name' => 'Formatted content', 'slug' => 'formatted-content']);
+        $formatted = '<p><strong>Bold</strong> <em>italic</em> <u>underlined</u> <span class="rich-text-size-large">large</span></p><ul><li>Bullet</li></ul><a href="https://example.test">Link</a><a href="javascript:alert(1)">Unsafe link</a><script>alert(1)</script>';
+
+        $this->get('/admin/categories/'.$category->id.'/edit')
+            ->assertOk()
+            ->assertSee('data-rich-text-editor', false)
+            ->assertSee('data-command="bold"', false)
+            ->assertSee('data-font-size', false)
+            ->assertSee('data-action="link"', false);
+
+        $this->put('/admin/categories/'.$category->id, [
+            'name' => 'Formatted content',
+            'slug' => 'formatted-content',
+            'description' => $formatted,
+            'sort_order' => 0,
+            'is_active' => '1',
+        ])->assertRedirect();
+
+        $category = $category->fresh();
+        $this->assertStringContainsString('<strong>Bold</strong>', $category->description);
+
+        $this->post('/admin/services', [
+            'service_category_id' => $category->id,
+            'title' => 'Formatted service',
+            'slug' => 'formatted-service',
+            'description' => $formatted,
+            'eligibility' => '<p><strong>Eligibility:</strong> Adults only.</p>',
+            'who_needs_service' => '<p><em>Who:</em> Applicants.</p>',
+            'important_notes' => '<p><u>Note:</u> Confirm details.</p>',
+            'sort_order' => 0,
+            'is_active' => '1',
+        ])->assertRedirect();
+
+        $service = Service::whereSlug('formatted-service')->firstOrFail();
+        $this->assertStringContainsString('<strong>Bold</strong>', $service->description);
+        $this->assertStringContainsString('<span class="rich-text-size-large">large</span>', $service->description);
+        $this->assertStringContainsString('<strong>Eligibility:</strong>', $service->eligibility);
+        $this->assertStringContainsString('<em>Who:</em>', $service->who_needs_service);
+        $this->assertStringContainsString('<u>Note:</u>', $service->important_notes);
+        $this->assertStringNotContainsString('javascript:', $service->description);
+        $this->assertStringNotContainsString('<script>', $service->description);
+        $this->get('/notary-services/'.$category->slug)
+            ->assertOk()
+            ->assertSee('<strong>Bold</strong>', false)
+            ->assertSee('<ul><li>Bullet</li></ul>', false)
+            ->assertDontSee('<script>', false);
+        $this->get('/notary-services/'.$category->slug.'/'.$service->slug)
+            ->assertOk()
+            ->assertSee('<strong>Bold</strong>', false)
+            ->assertSee('<ul><li>Bullet</li></ul>', false)
+            ->assertSee('href="https://example.test"', false)
+            ->assertSee('<strong>Eligibility:</strong> Adults only.', false)
+            ->assertSee('<em>Who:</em> Applicants.', false)
+            ->assertSee('<u>Note:</u> Confirm details.', false)
+            ->assertDontSee('javascript:alert(1)', false)
+            ->assertDontSee('<script>', false);
+    }
+
     public function test_admin_can_manage_moj_categories_and_services_separately(): void
     {
         $this->actingAs(User::factory()->create());

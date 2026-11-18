@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceCategory;
+use App\Support\RichText;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -104,6 +105,7 @@ class CategoryController extends Controller
             'sort_order' => ['required', 'integer', 'min:0', 'max:100000'],
             'is_active' => ['nullable', 'boolean'],
         ]);
+        $data['description'] = RichText::sanitize($data['description'] ?? null);
         $data['service_type'] = $category ? $category->service_type : ($data['service_type'] ?? $request->query('type', 'notary'));
         if (! in_array($data['service_type'], ['notary', 'moj'], true)) {
             abort(422, 'Unknown service section.');

@@ -36,6 +36,16 @@
 .admin-form .form-label { margin-bottom: 6px; color: #394657; font-size: 12px; font-weight: 650; }
 .admin-form .form-control, .admin-form .form-select { min-height: 43px; border-radius: 2px; font-size: 13px; }
 .admin-form textarea.form-control { min-height: initial; }
+.rich-text-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; padding: 7px; border: 1px solid #cbd1d6; border-bottom: 0; background: #f7f8f9; }
+.rich-text-button { min-width: 34px; min-height: 32px; padding: 4px 8px; border: 1px solid #d5d9dd; border-radius: 2px; color: #394657; background: #fff; font-size: 13px; }
+.rich-text-button:hover, .rich-text-button:focus-visible { border-color: var(--gold-dark); color: var(--navy); }
+.rich-text-size { min-height: 32px; padding: 4px 26px 4px 8px; border: 1px solid #d5d9dd; border-radius: 2px; color: #394657; background: #fff; font-size: 12px; }
+.rich-text-area { min-height: 190px; padding: 10px 12px; border: 1px solid #cbd1d6; border-radius: 0 0 2px 2px; color: var(--ink); background: #fff; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.rich-text-area:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 .2rem rgba(168, 137, 81, .14); outline: 0; }
+.rich-text-area ul, .rich-text-area ol { padding-left: 1.5rem; }
+.rich-text-area .rich-text-size-small { font-size: .875em; }
+.rich-text-area .rich-text-size-large { font-size: 1.25em; }
+.rich-text-source[hidden], .rich-text-area[hidden], .rich-text-toolbar[hidden] { display: none; }
 .admin-form .form-check-label { color: #455262; font-size: 13px; }
 .admin-form .form-text, .admin-note { font-size: 11px; }
 .admin-login { max-width: 440px; margin: 6vh auto; padding: 32px; border: 1px solid var(--line); background: #fff; box-shadow: var(--shadow); }

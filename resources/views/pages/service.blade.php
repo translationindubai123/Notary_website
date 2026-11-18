@@ -50,13 +50,13 @@
         <div class="container article-layout service-detail-layout">
             <article class="content-prose service-content">
                 @if ($service->description)
-                    <section class="service-content-card" id="about-service"><span class="eyebrow">Overview</span><h2>About this service</h2>{!! nl2br(e($service->description)) !!}</section>
+                    <section class="service-content-card" id="about-service"><span class="eyebrow">Overview</span><h2>About this service</h2>{!! \App\Support\RichText::sanitize($service->description) !!}</section>
                 @endif
                 @if ($service->eligibility)
-                    <section class="service-content-card" id="eligibility"><span class="eyebrow">Before you proceed</span><h2>Eligibility and requirements</h2>{!! nl2br(e($service->eligibility)) !!}</section>
+                    <section class="service-content-card" id="eligibility"><span class="eyebrow">Before you proceed</span><h2>Eligibility and requirements</h2>{!! \App\Support\RichText::sanitize($service->eligibility) !!}</section>
                 @endif
                 @if ($service->who_needs_service)
-                    <section class="service-content-card" id="who-needs-service"><span class="eyebrow">Who this is for</span><h2>Who may need this service</h2>{!! nl2br(e($service->who_needs_service)) !!}</section>
+                    <section class="service-content-card" id="who-needs-service"><span class="eyebrow">Who this is for</span><h2>Who may need this service</h2>{!! \App\Support\RichText::sanitize($service->who_needs_service) !!}</section>
                 @endif
                 @if ($service->documents->isNotEmpty())
                     <section class="service-content-card" id="required-documents"><span class="eyebrow">Prepare your documents</span><h2>Required documents</h2><ul class="service-document-list">@foreach ($service->documents as $document)<li><strong>{{ $document->document_name }}</strong>@if ($document->document_description)<span>{{ $document->document_description }}</span>@endif</li>@endforeach</ul></section>
@@ -68,7 +68,7 @@
                     <section class="service-content-card" id="service-details"><span class="eyebrow">At a glance</span><h2>Service details</h2><dl class="service-facts">@if ($service->processing_time)<div><dt>Processing time</dt><dd>{{ $service->processing_time }}</dd></div>@endif @if ($service->service_availability)<div><dt>Availability</dt><dd>{{ $service->service_availability }}</dd></div>@endif</dl></section>
                 @endif
                 @if ($service->important_notes)
-                    <section class="service-content-card" id="important-notes"><span class="eyebrow">Please note</span><h2>Important notes</h2>{!! nl2br(e($service->important_notes)) !!}</section>
+                    <section class="service-content-card" id="important-notes"><span class="eyebrow">Please note</span><h2>Important notes</h2>{!! \App\Support\RichText::sanitize($service->important_notes) !!}</section>
                 @endif
                 @if ($service->faqs->isNotEmpty())
                     <section class="service-content-card" id="service-faqs"><span class="eyebrow">Common questions</span><h2>Frequently asked questions</h2><div class="faq-list service-faq-list">@foreach ($service->faqs as $faq)<details><summary>{{ $faq->question }}</summary><p>{{ $faq->answer }}</p></details>@endforeach</div></section>

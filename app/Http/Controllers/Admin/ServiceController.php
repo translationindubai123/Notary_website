@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\ServiceCategory;
+use App\Support\RichText;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -55,6 +56,7 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $data = $this->validated($request);
+        $this->sanitizeRichTextFields($data);
         $data['featured_image'] = $request->file('featured_image')?->store('services', 'public');
         $service = DB::transaction(function () use ($data, $request) {
             $service = Service::create($this->serviceFields($data, $request));
@@ -85,6 +87,7 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $data = $this->validated($request, $service);
+        $this->sanitizeRichTextFields($data);
         $oldImage = $service->featured_image;
         $newImage = null;
         if ($request->hasFile('featured_image')) {
@@ -114,6 +117,13 @@ class ServiceController extends Controller
         }
 
         return redirect()->route('admin.services.index', ['type' => $service->category->service_type])->with('status', 'Service deleted.');
+    }
+
+    private function sanitizeRichTextFields(array &$data): void
+    {
+        foreach (['description', 'eligibility', 'who_needs_service', 'important_notes'] as $field) {
+            $data[$field] = RichText::sanitize($data[$field] ?? null);
+        }
     }
 
     private function validated(Request $request, ?Service $service = null): array

@@ -192,6 +192,8 @@ h1 { text-wrap: balance; }
 .content-prose h2 { margin-top: 0; margin-bottom: 12px; }
 .content-prose p, .content-prose li { max-width: 780px; }
 .content-prose li + li { margin-top: 8px; }
+.content-prose .rich-text-size-small, .service-content-card .rich-text-size-small { font-size: .875em; }
+.content-prose .rich-text-size-large, .service-content-card .rich-text-size-large { font-size: 1.25em; }
 .article-layout { display: grid; grid-template-columns: minmax(0, 1fr) 290px; align-items: start; gap: 55px; }
 .article-layout .content-prose section + section { margin-top: 35px; }
 .article-layout .content-prose h2 { font-size: 27px; }

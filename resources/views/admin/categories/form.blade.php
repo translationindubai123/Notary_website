@@ -12,7 +12,7 @@
             <div class="col-md-6"><label class="form-label" for="parent_id">Parent category</label><select class="form-select" id="parent_id" name="parent_id"><option value="">Top-level category</option>@foreach ($parents as $parent)<option value="{{ $parent->id }}" @selected((string) old('parent_id', $category->parent_id) === (string) $parent->id)>{{ $parent->name }}</option>@endforeach</select></div>
             <div class="col-md-6"><label class="form-label" for="sort_order">Sort order</label><input class="form-control" id="sort_order" name="sort_order" type="number" min="0" value="{{ old('sort_order', $category->sort_order ?? 0) }}" required></div>
             <div class="col-12"><label class="form-label" for="short_description">Short description</label><textarea class="form-control" id="short_description" name="short_description" rows="2" maxlength="500">{{ old('short_description', $category->short_description) }}</textarea></div>
-            <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" name="description" rows="6">{{ old('description', $category->description) }}</textarea></div>
+            <div class="col-12"><label class="form-label" for="description">Description</label><x-admin.rich-text-editor name="description" label="Category description" :value="old('description', $category->description)" :rows="6" /></div>
         </div>
     </div>
     <div class="admin-form-section"><h2>SEO</h2><div class="row g-3">
@@ -23,4 +23,5 @@
     <label class="form-check mb-4"><input class="form-check-input" type="checkbox" name="is_active" value="1" @checked(old('is_active', $category->is_active))><span class="form-check-label">Active (visible on the public website)</span></label>
     <button class="button button-dark" type="submit">Save category</button>
 </form>
+<script src="{{ asset('js/admin.js') }}" defer></script>
 @endsection
